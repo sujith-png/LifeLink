@@ -1,0 +1,28 @@
+{
+  "name": "lifelink",
+  "version": "1.0.0",
+  "description": "LifeLink - Emergency Blood Donor Finder Full-Stack Application",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "migrate": "node src/db/migrate.js",
+    "seed": "node src/db/seedDemoData.js",
+    "test": "node tests/test_firebase_auth.js",
+    "test:firebase": "node tests/test_firebase_auth.js",
+    "test:all": "node tests/test_firebase_auth.js && node tests/test_phase2_otp.js && node tests/test_phase3_matching.js && node tests/test_phase4_lifecycle.js && node tests/test_phase5_verification.js && node tests/test_phase6_views_and_admin.js && node tests/test_document_verification.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "firebase-admin": "^14.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.4.0"
+  },
+  "optionalDependencies": {
+    "better-sqlite3": "^11.8.1"
+  }
+}

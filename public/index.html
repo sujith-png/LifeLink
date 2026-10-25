@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeLink — Emergency Blood Donor Finder</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2226%22 font-size=%2226%22>🩸</text></svg>">
+</head>
+<body>
+
+  <!-- Safety & Emergency Disclaimer Banner -->
+  <div class="disclaimer-banner">
+    <span>⚠️ <strong>EMERGENCY NOTICE:</strong> LifeLink connects community blood donors and does NOT replace dialing <strong>108 / 112</strong> or contacting hospital emergency departments.</span>
+  </div>
+
+  <!-- Disclaimer Banner -->
+
+  <!-- Header & Navigation -->
+  <header class="header">
+    <div class="nav-container">
+      <a href="#" class="brand-logo" onclick="showView('home'); return false;">
+        <span class="drop-icon">🩸</span> LifeLink
+      </a>
+
+      <button class="mobile-menu-btn" id="mobile-toggle" aria-label="Toggle navigation">☰</button>
+
+      <ul class="nav-links" id="nav-menu">
+        <li><a href="#" class="nav-link active" onclick="showView('home'); return false;">Home</a></li>
+        <li><a href="#" class="nav-link" id="nav-link-board" onclick="showView('emergency-board'); return false;">Emergency Board</a></li>
+        <li><a href="#" class="nav-link" id="nav-link-banks" onclick="showView('blood-banks'); return false;">Blood Banks</a></li>
+        <li><a href="#" class="nav-link" id="nav-link-donor-dashboard" style="display:none;" onclick="showView('donor-dashboard'); return false;">Donor Dashboard</a></li>
+        <li><a href="#" class="nav-link" id="nav-link-admin" style="display:none;" onclick="showView('admin-dashboard'); return false;">Admin Panel</a></li>
+      </ul>
+
+      <div class="nav-auth-buttons">
+        <div id="nav-guest-actions" style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" onclick="openModal('login-modal')">Log In</button>
+          <button class="btn btn-primary" onclick="openModal('register-modal')">Register as Donor</button>
+        </div>
+        <div id="nav-user-actions" style="display: none; align-items: center; gap: 10px;">
+          <button class="btn btn-secondary" id="btn-notifications-toggle" style="position:relative; padding:8px 12px;" title="View Notifications">
+            🔔 <span id="nav-unread-badge" style="display:none; background:var(--primary-red); color:#fff; border-radius:9999px; padding:1px 6px; font-size:0.75rem; font-weight:700; margin-left:3px;">0</span>
+          </button>
+          <span id="nav-user-greeting" style="font-size: 0.9rem; font-weight: 600; color: var(--primary-dark);"></span>
+          <button class="btn btn-secondary" id="btn-logout">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+
+    <!-- VIEW 1: HOME -->
+    <section id="view-home" class="view-panel">
+      <div class="hero-section">
+        <div class="hero-badge">⚡ Real-Time Blood Match Engine</div>
+        <h1 class="hero-title">Connecting Patients with <span>Nearby Blood Donors</span> in Minutes</h1>
+        <p class="hero-subtitle">
+          When minutes count, LifeLink instantly notifies compatible, verified local donors. No middlemen, no delays.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-emergency-hero" id="btn-hero-post" onclick="showPostRequestFlow()">
+            🚨 Post Emergency Request
+          </button>
+          <button class="btn btn-secondary" onclick="openModal('register-modal')">
+            ❤️ Register as a Donor
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Platform Stats Ribbon -->
+      <div class="stats-ribbon">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-total-donors">...</div>
+          <div class="stat-label">Registered Donors</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-available-donors" style="color: var(--success);">...</div>
+          <div class="stat-label">Available for Alerts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-match-time">&lt; 3 mins</div>
+          <div class="stat-label">Average Alert Speed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color: #2563eb;">100% Free</div>
+          <div class="stat-label">Community Driven</div>
+        </div>
+      </div>
+
+      <!-- How it Works & Compatibility Guide -->
+      <div class="card">
+        <h2 class="card-title">🩺 How LifeLink Works</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 16px;">
+          <div style="border-left: 3px solid var(--primary-red); padding-left: 12px;">
+            <h4 style="color: var(--primary-red); font-size: 1.05rem;">1. Post Request</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
+              Specify blood group, units, hospital, and urgency level with required medical requisition slip.
+            </p>
+          </div>
+          <div style="border-left: 3px solid var(--primary-red); padding-left: 12px;">
+            <h4 style="color: var(--primary-red); font-size: 1.05rem;">2. Targeted Matching</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
+              Our algorithm alerts strictly eligible donors (>90 days recovery) within proximity using ABO compatibility.
+            </p>
+          </div>
+          <div style="border-left: 3px solid var(--primary-red); padding-left: 12px;">
+            <h4 style="color: var(--primary-red); font-size: 1.05rem;">3. Secure Connection</h4>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
+              Requester contact is released only when a donor confirms "I can come", preserving donor & requester privacy.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: DONOR DASHBOARD -->
+    <section id="view-donor-dashboard" class="view-panel" style="display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a;">Donor Control Panel</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Manage your availability, eligibility status and emergency alerts.</p>
+        </div>
+        <button class="btn btn-outline-red" onclick="openModal('edit-profile-modal')">✏️ Edit Profile</button>
+      </div>
+
+      <!-- Eligibility Card -->
+      <div class="eligibility-box" id="dash-eligibility-box">
+        <div class="eligibility-icon" id="dash-eligibility-icon">⏳</div>
+        <div>
+          <h3 id="dash-eligibility-title" style="font-size: 1.15rem; font-weight: 700;">Checking Eligibility...</h3>
+          <p id="dash-eligibility-desc" style="font-size: 0.9rem; margin-top: 2px;">Loading details...</p>
+        </div>
+      </div>
+
+      <!-- Donor Profile & Availability Card -->
+      <div class="card" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div id="dash-blood-badge" style="background: var(--primary-red); color: #fff; width: 68px; height: 68px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; font-weight: 800; box-shadow: var(--shadow-red);">
+            --
+          </div>
+          <div>
+            <h3 id="dash-donor-name" style="font-size: 1.3rem; font-weight: 700; color: #0f172a;">Donor Name</h3>
+            <p id="dash-donor-location" style="color: var(--text-muted); font-size: 0.9rem;">City, PIN</p>
+            <p id="dash-donor-phone" style="color: var(--text-muted); font-size: 0.9rem;">Phone</p>
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label" style="margin-bottom: 8px;">Emergency Alert Status</label>
+          <div class="toggle-switch-wrapper">
+            <label class="switch">
+              <input type="checkbox" id="dash-availability-toggle">
+              <span class="slider"></span>
+            </label>
+            <span id="dash-availability-label" style="font-weight: 700; font-size: 0.95rem;">Available</span>
+          </div>
+          <p class="form-help">Toggle OFF if you are currently sick, traveling, or unavailable to respond.</p>
+        </div>
+
+        <div style="border-left: 1px solid var(--border-color); padding-left: 20px;">
+          <label class="form-label">Last Recorded Blood Donation</label>
+          <p id="dash-last-donation-text" style="font-size: 1rem; font-weight: 600; color: #334155; margin-bottom: 12px;">--</p>
+          <button class="btn btn-secondary" id="btn-record-donation" style="font-size: 0.85rem; padding: 6px 14px;">
+            🩸 Record Recent Donation
+          </button>
+        </div>
+      </div>
+
+      <!-- Notification Alerts placeholder for Phase 4 -->
+      <div class="card" id="donor-alerts-card">
+        <h3 class="card-title">🔔 Emergency Requests Dispatched to You</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">You will receive real-time alerts here whenever a patient in your area matches your blood group.</p>
+        <div id="donor-alerts-list" style="margin-top: 16px;">
+          <p style="color: var(--text-light); font-style: italic;">No active alerts at this moment.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: PUBLIC EMERGENCY BOARD -->
+    <section id="view-emergency-board" class="view-panel" style="display: none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a;">📋 Emergency Blood Board</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Live feed of open emergency blood requests requiring community response.</p>
+        </div>
+        <button class="btn btn-emergency-hero" style="font-size: 0.9rem; padding: 8px 18px;" onclick="showPostRequestFlow()">
+          🚨 Post Emergency Request
+        </button>
+      </div>
+
+      <!-- Filter Controls Bar -->
+      <div class="filter-bar-card">
+        <div>
+          <label class="form-label" style="font-size:0.8rem;">Blood Group</label>
+          <select id="board-filter-blood" class="form-input">
+            <option value="">All Blood Groups</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label" style="font-size:0.8rem;">City</label>
+          <select id="board-filter-city" class="form-input">
+            <option value="">All Cities</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label" style="font-size:0.8rem;">Urgency Level</label>
+          <select id="board-filter-urgency" class="form-input">
+            <option value="">All Urgencies</option>
+            <option value="Critical">🚨 Critical</option>
+            <option value="Urgent">⚡ Urgent</option>
+            <option value="Normal">Normal</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label" style="font-size:0.8rem;">Verification Status</label>
+          <select id="board-filter-verification" class="form-input">
+            <option value="">All Verification Levels</option>
+            <option value="Hospital Confirmed">🏥 Hospital Confirmed</option>
+            <option value="Document Verified">📄 Document Verified</option>
+            <option value="Phone Verified">📱 Phone Verified</option>
+          </select>
+        </div>
+
+        <div>
+          <button class="btn btn-secondary" style="width:100%;" onclick="window.LifeLink.resetBoardFilters()">Reset Filters</button>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <span id="board-count" style="font-size:0.9rem; font-weight:700; color:var(--text-muted);">Loading active requests...</span>
+        <span id="board-loading" style="display:none; font-size:0.85rem; color:var(--primary-red);">⏳ Refreshing...</span>
+      </div>
+
+      <!-- Requests Cards List Container -->
+      <div id="board-requests-list">
+        <!-- Rendered dynamically by emergency-board.js -->
+      </div>
+    </section>
+
+    <!-- VIEW 4: BLOOD BANKS & HOSPITALS DIRECTORY -->
+    <section id="view-blood-banks" class="view-panel" style="display: none;">
+      <div style="margin-bottom:20px;">
+        <h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a;">🏥 Verified Blood Banks & Hospitals</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">
+          Official directory of regional 24/7 blood banks and major hospital transfusion centers with direct telephone switchboards.
+        </p>
+      </div>
+
+      <!-- Search & City Filter Bar -->
+      <div class="card" style="margin-bottom:20px; display:flex; gap:16px; flex-wrap:wrap; align-items:center;">
+        <div style="flex: 2; min-width: 240px;">
+          <input type="text" id="banks-search-input" class="form-input" placeholder="🔍 Search hospital name, landmark, or address...">
+        </div>
+        <div style="flex: 1; min-width: 180px;">
+          <select id="banks-filter-city" class="form-input">
+            <option value="">All Cities</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <span id="banks-count" style="font-size:0.9rem; font-weight:700; color:var(--text-muted);">Loading facilities...</span>
+        <span id="banks-loading" style="display:none; font-size:0.85rem; color:#0f766e;">⏳ Loading directory...</span>
+      </div>
+
+      <!-- Facilities Grid -->
+      <div id="banks-list" class="banks-grid">
+        <!-- Rendered dynamically by blood-banks.js -->
+      </div>
+    </section>
+
+    <!-- VIEW 5: ADMIN DASHBOARD -->
+    <section id="view-admin-dashboard" class="view-panel" style="display: none;">
+      <!-- Auth Gate for Non-Admin -->
+      <div id="admin-auth-gate" class="card" style="display:none; text-align:center; padding: 48px 20px;">
+        <div style="font-size:3rem; margin-bottom:12px;">🔒</div>
+        <h3 style="font-size:1.4rem; font-weight:800; color:#0f172a;">Restricted Administrator Area</h3>
+        <p style="color:var(--text-muted); max-width:440px; margin: 8px auto 20px auto;">
+          This portal is reserved for LifeLink hospital coordinators and administrative moderators. Please log in with administrator credentials.
+        </p>
+        <button class="btn btn-primary" onclick="openModal('login-modal')">Log In as Administrator</button>
+      </div>
+
+      <!-- Main Admin Panel -->
+      <div id="admin-main-panel" style="display:none;">
+        <div style="margin-bottom:20px;">
+          <h2 style="font-size: 1.75rem; font-weight: 800; color: #0f172a;">🛡️ LifeLink Operations Center</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Request verification, community moderation, phone blocklist, and hospital cross-check.</p>
+        </div>
+
+        <!-- KPI Metrics Grid -->
+        <div class="admin-stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="admin-stat-donors">0</div>
+            <div class="stat-label">Total Donors</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="admin-stat-active" style="color:var(--primary-red);">0</div>
+            <div class="stat-label">Active Requests</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="admin-stat-fulfilled" style="color:var(--success);">0</div>
+            <div class="stat-label">Fulfilled</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="admin-stat-flagged" style="color:var(--warning);">0</div>
+            <div class="stat-label">Flagged / Hidden</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="admin-stat-blocked">0</div>
+            <div class="stat-label">Blocked Phones</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="admin-stat-banks" style="color:#0f766e;">0</div>
+            <div class="stat-label">Verified Hospitals</div>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="admin-tab-nav">
+          <button class="admin-tab-btn active" data-tab="queue">🛡️ Verification Queue</button>
+          <button class="admin-tab-btn" data-tab="reports">🚩 Reports & Moderation</button>
+          <button class="admin-tab-btn" data-tab="blocklist">🚫 Phone Blocklist</button>
+          <button class="admin-tab-btn" data-tab="audit">📜 Verification Audit Trail</button>
+        </div>
+
+        <!-- TAB 1: Verification Queue -->
+        <div id="admin-tab-queue" class="admin-tab-content">
+          <div id="admin-queue-list">
+            <!-- Rendered dynamically by admin-dashboard.js -->
+          </div>
+        </div>
+
+        <!-- TAB 2: Reports Moderation -->
+        <div id="admin-tab-reports" class="admin-tab-content" style="display:none;">
+          <div id="admin-reports-list">
+            <!-- Rendered dynamically by admin-dashboard.js -->
+          </div>
+        </div>
+
+        <!-- TAB 3: Phone Blocklist -->
+        <div id="admin-tab-blocklist" class="admin-tab-content" style="display:none;">
+          <div class="card" style="margin-bottom:20px;">
+            <h4 style="font-weight:700; margin-bottom:12px;">Add Phone to Blacklist</h4>
+            <form id="admin-add-blocklist-form" style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+              <div style="flex:1; min-width:200px;">
+                <label class="form-label" for="blocklist-add-phone">Phone Number *</label>
+                <input type="tel" id="blocklist-add-phone" class="form-input" placeholder="e.g. 9876543210" required>
+              </div>
+              <div style="flex:2; min-width:240px;">
+                <label class="form-label" for="blocklist-add-reason">Reason *</label>
+                <input type="text" id="blocklist-add-reason" class="form-input" placeholder="e.g. Repeated fraudulent requests" required>
+              </div>
+              <button type="submit" class="btn btn-outline-red">Block Phone</button>
+            </form>
+          </div>
+
+          <div class="card" style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Phone Number</th>
+                  <th>Reason</th>
+                  <th>Blocked By</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-blocklist-table-body">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 4: Audit Logs -->
+        <div id="admin-tab-audit" class="admin-tab-content" style="display:none;">
+          <div class="card" style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Request</th>
+                  <th>Admin</th>
+                  <th>Status Transition</th>
+                  <th>Verification Method</th>
+                  <th>Notes</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="admin-audit-table-body">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: LOGIN -->
+  <div class="modal-overlay" id="login-modal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title">Sign In to LifeLink</h3>
+        <button class="modal-close-btn" onclick="closeModal('login-modal')">&times;</button>
+      </div>
+      <form id="login-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="login-email">Email Address or Mobile Phone</label>
+            <input type="text" id="login-email" class="form-input" required placeholder="donor@example.com or 9876543210" autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="login-password">Password</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="login-password" class="form-input" required placeholder="••••••••" autocomplete="current-password">
+              <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
+                <svg class="eye-icon eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <svg class="eye-icon eye-closed" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                  <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                  <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                  <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                  <line x1="2" y1="2" x2="22" y2="22"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('login-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Log In</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTER -->
+  <div class="modal-overlay" id="register-modal">
+    <div class="modal-window" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Register on LifeLink</h3>
+        <button class="modal-close-btn" onclick="closeModal('register-modal')">&times;</button>
+      </div>
+      <form id="register-form">
+        <div class="modal-body">
+          <!-- Role selector -->
+          <div class="form-group">
+            <label class="form-label">I want to:</label>
+            <div style="display: flex; gap: 20px; align-items: center; margin-top: 6px;">
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600;">
+                <input type="radio" name="role" id="role-donor" value="donor" checked> Register as Donor (Save Lives)
+              </label>
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600;">
+                <input type="radio" name="role" id="role-requester" value="requester"> Blood Requester Only
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Email Address *</label>
+            <input type="email" id="reg-email" class="form-input" required placeholder="donor@example.com" autocomplete="email">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="reg-password">Password (min 6 chars) *</label>
+              <div class="password-input-wrapper">
+                <input type="password" id="reg-password" class="form-input" required minlength="6" placeholder="••••••••" autocomplete="new-password">
+                <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
+                  <svg class="eye-icon eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  <svg class="eye-icon eye-closed" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                    <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                    <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                    <line x1="2" y1="2" x2="22" y2="22"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-confirm-password">Confirm Password *</label>
+              <div class="password-input-wrapper">
+                <input type="password" id="reg-confirm-password" class="form-input" required minlength="6" placeholder="••••••••" autocomplete="new-password">
+                <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
+                  <svg class="eye-icon eye-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  <svg class="eye-icon eye-closed" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                    <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                    <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                    <line x1="2" y1="2" x2="22" y2="22"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Donor specific fields -->
+          <div id="donor-specific-fields">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="reg-name">Full Name *</label>
+                <input type="text" id="reg-name" class="form-input" placeholder="e.g. Rahul Sharma">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-phone">Mobile Phone (Indian Mobile) *</label>
+                <div style="display: flex; gap: 6px;">
+                  <span class="phone-country-prefix" style="display: flex; align-items: center; padding: 0 10px; background: #e2e8f0; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-weight: 700; font-size: 0.9rem; color: #334155;">🇮🇳 +91</span>
+                  <input type="tel" id="reg-phone" class="form-input" placeholder="9876543210" style="flex: 1;" maxlength="10">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Blood Group *</label>
+              <div class="blood-group-grid">
+                <div class="blood-chip" data-group="A+">A+</div>
+                <div class="blood-chip" data-group="A-">A-</div>
+                <div class="blood-chip" data-group="B+">B+</div>
+                <div class="blood-chip" data-group="B-">B-</div>
+                <div class="blood-chip" data-group="O+">O+</div>
+                <div class="blood-chip" data-group="O-">O-</div>
+                <div class="blood-chip" data-group="AB+">AB+</div>
+                <div class="blood-chip" data-group="AB-">AB-</div>
+              </div>
+              <input type="hidden" id="reg-blood-group" value="">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="reg-city">City *</label>
+                <input type="text" id="reg-city" class="form-input" placeholder="e.g. Mumbai, Bangalore">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-pincode">Area / Pincode *</label>
+                <input type="text" id="reg-pincode" class="form-input" placeholder="e.g. 400001, Indiranagar">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">GPS Geolocation (Optional for precise km matching)</label>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" id="reg-lat" class="form-input" placeholder="Latitude" style="flex: 1;">
+                <input type="text" id="reg-lng" class="form-input" placeholder="Longitude" style="flex: 1;">
+                <button type="button" class="btn btn-secondary" id="btn-get-location" style="white-space: nowrap;">
+                  📍 Auto-detect GPS
+                </button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="reg-last-donation">Last Blood Donation Date</label>
+                <input type="date" id="reg-last-donation" class="form-input">
+                <p class="form-help">Leave blank if you have never donated before.</p>
+              </div>
+              <div class="form-group" style="display: flex; flex-direction: column; justify-content: center;">
+                <label class="form-label">Availability Status</label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.95rem; margin-top: 6px;">
+                  <input type="checkbox" id="reg-available" checked>
+                  <strong>Available for emergency donor alerts</strong>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('register-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Complete Registration</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT DONOR PROFILE -->
+  <div class="modal-overlay" id="edit-profile-modal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Donor Profile</h3>
+        <button class="modal-close-btn" onclick="closeModal('edit-profile-modal')">&times;</button>
+      </div>
+      <form id="edit-donor-profile-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="dash-edit-name">Full Name</label>
+            <input type="text" id="dash-edit-name" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="dash-edit-phone">Contact Phone</label>
+            <input type="tel" id="dash-edit-phone" class="form-input" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="dash-edit-city">City</label>
+              <input type="text" id="dash-edit-city" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="dash-edit-pincode">Area / Pincode</label>
+              <input type="text" id="dash-edit-pincode" class="form-input" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="dash-edit-last-donation">Last Donation Date</label>
+            <input type="date" id="dash-edit-last-donation" class="form-input">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('edit-profile-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: POST EMERGENCY REQUEST -->
+  <div class="modal-overlay" id="post-request-modal">
+    <div class="modal-window" style="max-width: 680px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.4rem;">🚨</span>
+          <h3 class="modal-title">Broadcast Emergency Blood Request</h3>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('post-request-modal')">&times;</button>
+      </div>
+      <form id="post-request-form" enctype="multipart/form-data">
+        <div class="modal-body">
+
+          <!-- Patient & Blood Info -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="req-patient-name">Patient Full Name *</label>
+              <input type="text" id="req-patient-name" class="form-input" required placeholder="e.g. Ramesh Kulkarni">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="req-units-needed">Units Needed (Pints/Bags) *</label>
+              <input type="number" id="req-units-needed" class="form-input" required min="1" max="20" value="1">
+            </div>
+          </div>
+
+          <!-- Blood Group -->
+          <div class="form-group">
+            <label class="form-label">Patient Blood Group Needed *</label>
+            <div class="blood-group-grid">
+              <div class="blood-chip req-blood-chip" data-group="A+">A+</div>
+              <div class="blood-chip req-blood-chip" data-group="A-">A-</div>
+              <div class="blood-chip req-blood-chip" data-group="B+">B+</div>
+              <div class="blood-chip req-blood-chip" data-group="B-">B-</div>
+              <div class="blood-chip req-blood-chip" data-group="O+">O+</div>
+              <div class="blood-chip req-blood-chip" data-group="O-">O-</div>
+              <div class="blood-chip req-blood-chip" data-group="AB+">AB+</div>
+              <div class="blood-chip req-blood-chip" data-group="AB-">AB-</div>
+            </div>
+            <input type="hidden" id="req-blood-group" value="">
+          </div>
+
+          <!-- Urgency Level -->
+          <div class="form-group">
+            <label class="form-label">Urgency Level *</label>
+            <div class="urgency-selector">
+              <div class="urgency-btn" data-urgency="Critical">💥 Critical (Immediate)</div>
+              <div class="urgency-btn selected" data-urgency="Urgent">⚡ Urgent (Today)</div>
+              <div class="urgency-btn" data-urgency="Normal">⏳ Normal (24-48 hrs)</div>
+            </div>
+            <input type="hidden" id="req-urgency" value="Urgent">
+          </div>
+
+          <!-- Hospital and Doctor Details -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="req-hospital-name">Hospital Name *</label>
+              <input type="text" id="req-hospital-name" class="form-input" required placeholder="e.g. City General Hospital">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="req-doctor-name">Attending Doctor Name</label>
+              <input type="text" id="req-doctor-name" class="form-input" placeholder="e.g. Dr. A. Sen (MD)">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="req-ward-bed">Ward / Bed Number</label>
+              <input type="text" id="req-ward-bed" class="form-input" placeholder="e.g. ICU Bed #4, 2nd Floor">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="req-needed-by">Needed By Date & Time *</label>
+              <input type="datetime-local" id="req-needed-by" class="form-input" required>
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="req-city">City *</label>
+              <input type="text" id="req-city" class="form-input" required placeholder="e.g. Mumbai, Bengaluru">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="req-pincode">Area / Pincode</label>
+              <input type="text" id="req-pincode" class="form-input" placeholder="e.g. 400001, Whitefield">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Hospital GPS Location (Optional for distance sorting)</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <input type="text" id="req-lat" class="form-input" placeholder="Latitude" style="flex: 1;">
+              <input type="text" id="req-lng" class="form-input" placeholder="Longitude" style="flex: 1;">
+              <button type="button" class="btn btn-secondary" id="btn-get-req-location" style="white-space: nowrap;">
+                📍 Auto-detect GPS
+              </button>
+            </div>
+          </div>
+
+          <!-- Document Upload (COMPULSORY) -->
+          <div class="form-group" id="req-file-slip-group">
+            <label class="form-label" for="req-file-slip" style="font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between;">
+              <span>📄 Hospital Requisition Slip / Doctor's Prescription <span style="color: var(--primary-red); font-size: 1.15rem;">*</span></span>
+              <span style="font-size: 0.75rem; font-weight: 600; color: var(--primary-red); background: #fef2f2; padding: 2px 8px; border-radius: 4px; border: 1px solid #fecaca;">Compulsory</span>
+            </label>
+            <p class="form-help" style="margin-bottom: 8px; color: #475569; font-weight: 500;">
+              Upload your hospital requisition slip or doctor's prescription to submit a blood request.
+            </p>
+
+            <div id="slip-upload-dropzone" style="border: 2px dashed #cbd5e1; border-radius: 8px; padding: 18px 14px; text-align: center; background: #f8fafc; cursor: pointer; transition: all 0.2s ease;">
+              <input type="file" id="req-file-slip" accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf" style="display: none;">
+              
+              <div id="slip-upload-prompt">
+                <div style="font-size: 2rem; margin-bottom: 4px;">📎</div>
+                <div style="font-weight: 700; color: var(--primary-red); font-size: 0.95rem;">
+                  Click to select requisition slip or doctor's prescription
+                </div>
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">
+                  Allowed Formats: PDF, JPG, JPEG, PNG (Max size: 5 MB)
+                </div>
+              </div>
+
+              <!-- Selected File Preview Chip -->
+              <div id="slip-file-preview" style="display: none; align-items: center; justify-content: space-between; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; text-align: left;">
+                <div style="display: flex; align-items: center; gap: 12px; overflow: hidden;">
+                  <span id="slip-file-icon" style="font-size: 1.6rem;">📄</span>
+                  <div style="overflow: hidden;">
+                    <div id="slip-file-name" style="font-weight: 700; font-size: 0.9rem; color: #0f172a; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"></div>
+                    <div id="slip-file-size" style="font-size: 0.75rem; color: var(--text-muted);"></div>
+                  </div>
+                </div>
+                <button type="button" id="btn-remove-slip" class="btn btn-sm btn-outline-red" style="padding: 4px 10px; font-size: 0.8rem; white-space: nowrap;">
+                  ✕ Remove
+                </button>
+              </div>
+            </div>
+
+            <div id="slip-error-msg" style="display: none; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 6px 12px; font-size: 0.85rem; margin-top: 8px; font-weight: 600;"></div>
+
+            <p class="form-help" style="margin-top: 6px; font-size: 0.78rem;">
+              🔒 Confidential: Slips are inspected strictly by hospital administrators to award the verified trust badge and are NEVER exposed publicly.
+            </p>
+          </div>
+
+          <!-- Notes -->
+          <div class="form-group">
+            <label class="form-label" for="req-note">Special Instructions / Patient Note</label>
+            <textarea id="req-note" class="form-textarea" rows="2" placeholder="e.g. Emergency surgery scheduled at 8 PM. Please reach blood bank 3rd floor."></textarea>
+          </div>
+
+          <!-- Contact Mobile Phone Section -->
+          <div style="background: #f1f5f9; border-radius: var(--radius-md); padding: 16px; margin-top: 20px; border: 1px solid var(--border-color);">
+            <div style="margin-bottom: 6px;">
+              <h4 style="font-size: 1rem; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 6px;">
+                📱 Contact Phone Details
+              </h4>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+              Donors who confirm their availability will contact you directly on this number.
+            </p>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="req-contact-phone">Contact Mobile Number *</label>
+              <div style="display: flex; gap: 6px; max-width: 360px;">
+                <span class="phone-country-prefix" style="display: flex; align-items: center; padding: 0 10px; background: #e2e8f0; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-weight: 700; font-size: 0.9rem; color: #334155;">🇮🇳 +91</span>
+                <input type="tel" id="req-contact-phone" class="form-input" required placeholder="9876543210" maxlength="10">
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('post-request-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-submit-request" style="font-size: 1.05rem; padding: 12px 24px;">
+            🚨 Broadcast Emergency Request
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: MATCH RESULTS & DISPATCH SUMMARY -->
+  <div class="modal-overlay" id="match-results-modal">
+    <div class="modal-window" style="max-width: 550px;">
+      <div class="modal-header">
+        <h3 class="modal-title">🎉 Emergency Broadcast Active!</h3>
+        <button class="modal-close-btn" onclick="closeModal('match-results-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="match-count-text" style="font-size: 1.05rem; color: #0f172a; margin-bottom: 16px;"></p>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 14px;">
+          Matched donors have been notified via in-app alerts and SMS mock notifications. Your contact number remains private until a donor taps <strong>"I can come"</strong>.
+        </p>
+        <div id="match-details-list"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="closeModal('match-results-modal'); showView('emergency-board');">
+          View on Emergency Board
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: IN-APP NOTIFICATIONS DRAWER -->
+  <div class="modal-overlay" id="notifications-drawer-modal">
+    <div class="modal-window" style="max-width: 600px;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.4rem;">🔔</span>
+          <h3 class="modal-title">Notifications & Emergency Alerts</h3>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('notifications-drawer-modal')">&times;</button>
+      </div>
+      <div style="padding:12px 24px 0; display:flex; justify-content:flex-end;">
+        <button class="btn btn-secondary" id="btn-mark-all-read" style="font-size:0.8rem; padding:4px 10px;">
+          Mark all as read
+        </button>
+      </div>
+      <div class="modal-body" id="notifications-drawer-content" style="max-height:65vh; overflow-y:auto;">
+        <p style="color:var(--text-muted); text-align:center;">Loading notifications...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EMERGENCY PROGRESS TRACKER -->
+  <div class="modal-overlay" id="progress-tracker-modal">
+    <div class="modal-window" style="max-width: 740px;">
+      <div class="modal-header">
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span style="font-size:1.4rem;">📊</span>
+            <h3 class="modal-title" id="tracker-patient-title">Emergency Progress Tracker</h3>
+            <span id="tracker-verification-badge" class="badge-verification badge-phone-verified">Verified</span>
+          </div>
+          <p id="tracker-request-meta" style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">Hospital: Loading...</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeEmergencyProgressModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Metrics Grid -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:20px;">
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center;">
+            <div style="font-size:1.4rem; font-weight:800; color:#3b82f6;" id="metric-potential-matches">0</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Potential Matches</div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center;">
+            <div style="font-size:1.4rem; font-weight:800; color:#8b5cf6;" id="metric-donors-notified">0</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Donors Notified</div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center;">
+            <div style="font-size:1.4rem; font-weight:800; color:var(--success);" id="metric-accepted">0</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Accepted</div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center;">
+            <div style="font-size:1.4rem; font-weight:800; color:#0284c7;" id="metric-confirmed-avail">0</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Avail. Confirmed</div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center;">
+            <div style="font-size:1.4rem; font-weight:800; color:#d97706;" id="metric-on-the-way">0</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">On the Way</div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center;">
+            <div style="font-size:1.4rem; font-weight:800; color:#15803d;" id="metric-arrived">0</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Arrived (Self-Report)</div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center;">
+            <div style="font-size:1.2rem; font-weight:800; color:#d97706;" id="metric-fulfillment">Pending</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Fulfilment</div>
+          </div>
+        </div>
+
+        <!-- Requester Management Actions -->
+        <div id="tracker-requester-actions" style="margin-bottom:20px; display:flex; gap:10px; justify-content:center;"></div>
+
+        <!-- Live Accepted Donors Roster -->
+        <div id="tracker-accepted-roster"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeEmergencyProgressModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REPORT EMERGENCY REQUEST -->
+  <div class="modal-overlay" id="report-request-modal">
+    <div class="modal-window" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title">🚩 Report Emergency Request</h3>
+        <button class="modal-close-btn" onclick="closeModal('report-request-modal')">&times;</button>
+      </div>
+      <form id="report-form">
+        <div class="modal-body">
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">
+            Reporting: <strong id="report-request-id-display">--</strong>
+          </p>
+          <div class="form-group">
+            <label class="form-label" for="report-reason">Reason for Reporting *</label>
+            <select id="report-reason" class="form-input" required>
+              <option value="">Select a reason...</option>
+              <option value="Spam / False Information">Spam / False Information</option>
+              <option value="Suspected Fraud">Suspected Fraud (Demanding money, scam)</option>
+              <option value="Fake Emergency">Fake Emergency (Patient not at hospital)</option>
+              <option value="Unresponsive Contact">Unresponsive / Invalid phone number</option>
+              <option value="Other">Other Abuse</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="report-details">Additional Details (Optional)</label>
+            <textarea id="report-details" class="form-input" rows="3" placeholder="Explain why this request is suspicious or inaccurate..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="report-phone">Your Phone Number (Optional)</label>
+            <input type="tel" id="report-phone" class="form-input" placeholder="For moderator verification if needed">
+            <p class="form-help">Posts reaching 3 verified community reports are automatically suspended pending administrator review.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('report-request-modal')">Cancel</button>
+          <button type="submit" class="btn btn-outline-red">Submit Report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADMIN DOCUMENT INSPECTION & VERIFICATION VIEWER -->
+  <div class="modal-overlay" id="admin-slip-modal">
+    <div class="modal-window" style="max-width: 900px; width: 95%;">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.5rem;">📄</span>
+          <div>
+            <h3 class="modal-title" id="admin-slip-modal-title" style="margin: 0; font-size: 1.2rem;">
+              Medical Document Inspection
+            </h3>
+            <div id="admin-slip-patient-sub" style="font-size: 0.8rem; color: var(--text-muted);">
+              Confidential Hospital Requisition Slip / Doctor's Prescription
+            </div>
+          </div>
+          <span id="admin-slip-doc-badge" class="v-badge v-badge-phone">PENDING</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <!-- Zoom Controls for Images -->
+          <div id="admin-slip-zoom-toolbar" style="display: flex; align-items: center; gap: 4px; background: #f1f5f9; padding: 3px 6px; border-radius: 6px; border: 1px solid #cbd5e1;">
+            <button type="button" class="btn btn-sm btn-secondary" id="btn-zoom-out" title="Zoom Out" style="padding: 2px 8px; font-weight: 700;">−</button>
+            <span id="slip-zoom-level" style="font-size: 0.78rem; font-weight: 600; min-width: 42px; text-align: center;">100%</span>
+            <button type="button" class="btn btn-sm btn-secondary" id="btn-zoom-in" title="Zoom In" style="padding: 2px 8px; font-weight: 700;">+</button>
+            <button type="button" class="btn btn-sm btn-secondary" id="btn-zoom-reset" title="Reset Zoom" style="padding: 2px 6px; font-size: 0.75rem;">Reset</button>
+          </div>
+          <button class="modal-close-btn" onclick="closeModal('admin-slip-modal')">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body" style="text-align: center; max-height: 65vh; overflow: auto; background: #0f172a10; padding: 16px; border-radius: 4px; position: relative;">
+        <div id="admin-slip-container" style="display: inline-block; transition: transform 0.15s ease; transform-origin: top center;">
+          <img id="admin-slip-image" src="" alt="Requisition Slip" style="max-width: 100%; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; margin: 0 auto;">
+        </div>
+        <iframe id="admin-slip-frame" src="" style="width: 100%; height: 520px; border: 1px solid #cbd5e1; border-radius: 6px; display: none; background: #fff;"></iframe>
+        <div id="admin-slip-loading" style="padding: 40px; color: var(--text-muted); font-size: 0.95rem;">
+          Loading document from secure storage...
+        </div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <a id="admin-slip-download-link" href="#" class="btn btn-secondary btn-sm" download target="_blank">
+            💾 Download Original
+          </a>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">
+            🔒 Strictly authorized admin review
+          </span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" id="btn-modal-reject-doc" class="btn btn-outline-red btn-sm">
+            ❌ Reject Document
+          </button>
+          <button type="button" id="btn-modal-approve-doc" class="btn btn-success btn-sm">
+            ✅ Approve Document
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeModal('admin-slip-modal')">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification container -->
+  <div id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; align-items: center;">
+      <p style="font-weight: 700; color: var(--primary-red);">LifeLink — College Project Blood Donor Emergency Network</p>
+      <p style="color: var(--text-muted); font-size: 0.8rem;">
+        Developed with Node.js, Express, SQLite and Vanilla JS. In case of life-threatening emergencies, always call <strong>108 / 112</strong> immediately.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Application Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/donor-dashboard.js"></script>
+  <script src="js/post-request.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/request-details.js"></script>
+  <script src="js/emergency-board.js"></script>
+  <script src="js/blood-banks.js"></script>
+  <script src="js/admin-dashboard.js"></script>
+  <script>
+    // Navigation and View Switching Logic
+    function showView(viewId) {
+      document.querySelectorAll('.view-panel').forEach(panel => {
+        panel.style.display = 'none';
+      });
+
+      const target = document.getElementById('view-' + viewId);
+      if (target) {
+        target.style.display = 'block';
+      }
+
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+      });
+
+      const activeLink = document.querySelector(`.nav-link[onclick*="'${viewId}'"]`);
+      if (activeLink) activeLink.classList.add('active');
+
+      window.dispatchEvent(new CustomEvent('lifelink:view-changed', { detail: { view: viewId } }));
+
+      // Close mobile menu if open
+      const menu = document.getElementById('nav-menu');
+      if (menu) menu.classList.remove('mobile-open');
+    }
+
+    // Mobile nav hamburger toggle
+    document.getElementById('mobile-toggle')?.addEventListener('click', () => {
+      document.getElementById('nav-menu')?.classList.toggle('mobile-open');
+    });
+
+    // Helper for hero button (will connect to Post Request flow in Phase 3)
+    function showPostRequestFlow() {
+      // If modal exists in Phase 3, open it, else prompt to register/login
+      const postModal = document.getElementById('post-request-modal');
+      if (postModal) {
+        openModal('post-request-modal');
+      } else {
+        showToast('Emergency request form initialized! (Matching Engine activates in Phase 3)', 'info');
+      }
+    }
+
+    // Fetch and render public summary stats on home
+    async function loadHomeStats() {
+      try {
+        const res = await API.request('/api/donors/summary');
+        if (res.success && res.stats) {
+          const totalEl = document.getElementById('stat-total-donors');
+          const availEl = document.getElementById('stat-available-donors');
+          if (totalEl) totalEl.textContent = res.stats.totalDonors;
+          if (availEl) availEl.textContent = res.stats.availableDonors;
+        }
+      } catch (_) {}
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadHomeStats();
+    });
+  </script>
+</body>
+</html>

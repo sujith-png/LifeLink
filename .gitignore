@@ -1,0 +1,37 @@
+# Environment variables and secrets
+.env
+*.env
+!.env.example
+serviceAccountKey.json
+*firebase-adminsdk*.json
+
+# Dependencies
+node_modules/
+
+# SQLite database files
+lifelink
+lifelink.db
+lifelink.db-shm
+lifelink.db-wal
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Uploaded medical records (preserve directory structure only)
+uploads/*
+!uploads/.gitkeep
+!uploads/requisitions/
+uploads/requisitions/*
+!uploads/requisitions/.gitkeep
+
+# Temporary and reject directories
+gitreject/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+npm-debug.log*
